@@ -1,0 +1,58 @@
+version: '3'
+services:
+
+  default_conf: &default_conf
+    image: busybox
+    environment:
+      TZ: Asia/Tokyo
+    env_file:
+      - ./laravel/.env
+
+  web:
+    <<: *default_conf
+    image: nginx:alpine
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - php-fpm:/var/run/php-fpm:rw
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./laravel:/var/www/html:ro
+    depends_on:
+      - app
+
+  app:
+    <<: *default_conf
+    build:
+      context: ./docker/php-fpm
+    env_file:
+      - laravel/.env
+    volumes:
+      - php-fpm:/var/run/php-fpm:rw
+      - ./docker/php-fpm/php.ini:/usr/local/php/php.ini:ro
+      - ./docker/php-fpm/php-fpm.d:/usr/local/etc/php-fpm.d:ro
+      - ./laravel:/var/www/html:rw
+    depends_on:
+      - db
+
+  composer:
+    <<: *default_conf
+    image: composer/composer
+    volumes:
+      - ./app:/app:rw
+
+  db:
+    <<: *default_conf
+    image: mysql:5.7
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/mysql:rw
+      - ./docker/mysql/initdb:/docker-entrypoint-initdb.d:ro
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d:ro
+
+volumes:
+  db:
+  php-fpm:
