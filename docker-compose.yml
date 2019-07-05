@@ -26,8 +26,6 @@ services:
     <<: *default_conf
     build:
       context: ./docker/php-fpm
-    env_file:
-      - laravel/.env
     volumes:
       - php-fpm:/var/run/php-fpm:rw
       - ./docker/php-fpm/php.ini:/usr/local/php/php.ini:ro
@@ -35,12 +33,6 @@ services:
       - ./laravel:/var/www/html:rw
     depends_on:
       - db
-
-  composer:
-    <<: *default_conf
-    image: composer/composer
-    volumes:
-      - ./app:/app:rw
 
   db:
     <<: *default_conf
