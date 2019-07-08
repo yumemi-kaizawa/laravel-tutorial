@@ -17,4 +17,5 @@ Launch
 
 ```bash
 $ docker-composer up -d web app db
+$ open http://localhost
 ```
