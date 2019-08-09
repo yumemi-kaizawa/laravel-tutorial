@@ -16,6 +16,6 @@ Launch
 ========
 
 ```bash
-$ docker-compose up -d we app db
+$ docker-compose up -d
 $ open http://localhost
 ```
