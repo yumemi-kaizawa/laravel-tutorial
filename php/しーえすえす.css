@@ -1,5 +1,9 @@
-<style>
- body {
-  color: gray;
+p{
+  font-size: 20px;
 }
-</style>
+
+button{
+  font-size: 1.4em;
+  font-weight: bold;
+  padding: 10px 30px;
+}
